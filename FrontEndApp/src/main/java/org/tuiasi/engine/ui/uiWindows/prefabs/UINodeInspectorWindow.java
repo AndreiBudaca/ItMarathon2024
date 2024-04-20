@@ -1,6 +1,7 @@
 package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImVec2;
+import org.tuiasi.engine.networking.APICaller;
 import org.tuiasi.engine.ui.components.basicComponents.button.Button;
 import org.tuiasi.engine.ui.components.basicComponents.checkbox.CheckboxWithTitle;
 import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchbarWithHint;
@@ -27,6 +28,11 @@ public class UINodeInspectorWindow extends UIWindow {
     @Override
     protected void addPrefabComponents(){
         Button button = new Button("Button");
+        button.setListener(() -> {
+            APICaller apiCaller = new APICaller();
+            apiCaller.testFunc();
+        });
+
         addComponent(button);
         CheckboxWithTitle checkbox = new CheckboxWithTitle("Checkbox", false);
         addComponent(checkbox);

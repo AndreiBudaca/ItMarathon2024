@@ -5,6 +5,7 @@ import imgui.flag.ImGuiDir;
 import lombok.Getter;
 import lombok.Setter;
 import org.tuiasi.engine.ui.components.basicComponents.TopMenuBar;
+import org.tuiasi.engine.ui.components.basicComponents.button.Button;
 import org.tuiasi.engine.ui.components.basicComponents.textbox.Textbox;
 import org.tuiasi.engine.ui.uiWindows.IUIWindow;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
@@ -37,6 +38,12 @@ public class DefaultEngineEditorUI {
             debugLogsWindow.setDocked(true);
             mainWindow.addDockedWindow(debugLogsWindow, ImGuiDir.Down, 0.2f);
             uiWindows.add(debugLogsWindow);
+
+            UILogsWindow debugLogsWindow2 = new UILogsWindow("Debug logs2", new ImVec2(0, 0), new ImVec2(100, 100));
+            debugLogsWindow2.setDocked(true);
+            mainWindow.addDockedWindow(debugLogsWindow2, ImGuiDir.Up, 0.2f);
+            uiWindows.add(debugLogsWindow2);
+
 
             UINodeInspectorWindow nodeInspectorWindow = new UINodeInspectorWindow("Node Inspector", new ImVec2(0, 0), new ImVec2(100, 100));
             nodeInspectorWindow.setDocked(true);
