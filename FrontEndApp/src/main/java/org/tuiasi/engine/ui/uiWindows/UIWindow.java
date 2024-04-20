@@ -39,7 +39,7 @@ public class UIWindow extends IUIWindow{
     public UIWindow(String windowTitle, ImVec2 relativePosition, ImVec2 size, boolean isRootWindow){
         super(windowTitle, relativePosition, size);
         if(isRootWindow){
-            addFlag(ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoBackground  | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking);
+            addFlag(ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking);
         }
         this.isRoot = isRootWindow;
     }
@@ -72,7 +72,7 @@ public class UIWindow extends IUIWindow{
 
         // create dockspace
         dockspace_id = ImGui.getID(getWindowTitle() + "_dockspace");
-        ImGui.dockSpace(dockspace_id, 0, 0, ImGuiDockNodeFlags.PassthruCentralNode | ImGuiDockNodeFlags.NoDockingInCentralNode);
+        ImGui.dockSpace(dockspace_id, 0, 0, ImGuiDockNodeFlags.PassthruCentralNode);
 
 
         // setup docked windows
