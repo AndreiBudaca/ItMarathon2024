@@ -1,0 +1,6 @@
+@ItMarathonAPI_HostAddress = http://localhost:5296
+
+GET {{ItMarathonAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
