@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,12 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ItMarathon.Core\**" />
+    <Compile Remove="ItMarathon.Data\**" />
+    <Compile Remove="ItMarathon.Service\**" />
+    <Content Remove="ItMarathon.Core\**" />
+    <Content Remove="ItMarathon.Data\**" />
+    <Content Remove="ItMarathon.Service\**" />
+    <EmbeddedResource Remove="ItMarathon.Core\**" />
+    <EmbeddedResource Remove="ItMarathon.Data\**" />
+    <EmbeddedResource Remove="ItMarathon.Service\**" />
+    <None Remove="ItMarathon.Core\**" />
+    <None Remove="ItMarathon.Data\**" />
+    <None Remove="ItMarathon.Service\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ItMarathon.Core\ItMarathon.Core.csproj" />
-    <ProjectReference Include="..\ItMarathon.Service\ItMarathon.Service.csproj" />
+    <ProjectReference Include="ItMarathon.Core\ItMarathon.Core.csproj" />
+    <ProjectReference Include="ItMarathon.Service\ItMarathon.Service.csproj" />
   </ItemGroup>
 
 </Project>
