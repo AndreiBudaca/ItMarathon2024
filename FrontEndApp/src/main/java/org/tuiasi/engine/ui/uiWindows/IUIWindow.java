@@ -2,6 +2,7 @@ package org.tuiasi.engine.ui.uiWindows;
 
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.flag.ImGuiWindowFlags;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,12 +28,14 @@ public abstract class IUIWindow {
 
     public IUIWindow(String windowTitle) {
         this.windowTitle = windowTitle;
+        addFlag(ImGuiWindowFlags.NoMove);
     }
 
     public IUIWindow(String windowTitle, ImVec2 relativePosition, ImVec2 size){
         this.windowTitle = windowTitle;
         this.relativePosition = relativePosition;
         this.size = size;
+        addFlag(ImGuiWindowFlags.NoMove);
     }
 
     public void addComponent(IComponent component) {
