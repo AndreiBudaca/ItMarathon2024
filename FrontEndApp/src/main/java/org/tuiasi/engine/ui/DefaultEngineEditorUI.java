@@ -2,6 +2,8 @@ package org.tuiasi.engine.ui;
 
 import imgui.*;
 import imgui.flag.ImGuiDir;
+import imgui.flag.ImGuiWindowFlags;
+import imgui.internal.flag.ImGuiDockNodeFlags;
 import lombok.Getter;
 import lombok.Setter;
 import org.tuiasi.engine.ui.components.basicComponents.TopMenuBar;
@@ -39,10 +41,12 @@ public class DefaultEngineEditorUI {
             mainWindow.addDockedWindow(debugLogsWindow, ImGuiDir.Down, 0.2f);
             uiWindows.add(debugLogsWindow);
 
-            UILogsWindow debugLogsWindow2 = new UILogsWindow("Debug logs2", new ImVec2(0, 0), new ImVec2(100, 100));
-            debugLogsWindow2.setDocked(true);
-            mainWindow.addDockedWindow(debugLogsWindow2, ImGuiDir.Up, 0.2f);
-            uiWindows.add(debugLogsWindow2);
+            UIWindow coolStuff = new UIWindow("My Cool Stuff", new ImVec2(0, 0), new ImVec2(100, 100));
+            coolStuff.addFlag(ImGuiWindowFlags.NoMove);
+            coolStuff.addComponent(new Button("My nice button! :D"));
+            coolStuff.setDocked(true);
+            mainWindow.addDockedWindow(coolStuff, ImGuiDir.None, 0.2f);
+            uiWindows.add(coolStuff);
 
 
             UINodeInspectorWindow nodeInspectorWindow = new UINodeInspectorWindow("Node Inspector", new ImVec2(0, 0), new ImVec2(100, 100));

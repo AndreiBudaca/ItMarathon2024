@@ -3,6 +3,7 @@ package org.tuiasi.engine.ui.uiWindows;
 //import imgui.ImGui;
 import imgui.ImFont;
 import imgui.ImGuiStyle;
+import imgui.flag.ImGuiDir;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
 import imgui.ImVec2;
@@ -72,8 +73,8 @@ public class UIWindow extends IUIWindow{
 
         // create dockspace
         dockspace_id = ImGui.getID(getWindowTitle() + "_dockspace");
-        ImGui.dockSpace(dockspace_id, 0, 0, ImGuiDockNodeFlags.PassthruCentralNode);
 
+        ImGui.dockSpace(dockspace_id, 0, 0, ImGuiDockNodeFlags.PassthruCentralNode);
 
         // setup docked windows
         if(isFirstTime) {
@@ -93,15 +94,28 @@ public class UIWindow extends IUIWindow{
         ImGui.dockBuilderSetNodeSize(dockspace_id, windowVariables.getWidth(), windowVariables.getHeight() - WindowVariables.getInstance().getMainMenuHeight());
 
         ImInt newNode = new ImInt(dockspace_id);
+        ImInt oldNode = new ImInt();
         for(Map.Entry<IUIWindow, DockData> entry : dockedWindows.entrySet()){
-            // split the node defined by the newNode id in 2 windows and return the id of the newly split node in the given direection
-            int dock_id = ImGui.dockBuilderSplitNode(newNode.get(), entry.getValue().getDirection(), entry.getValue().getSplitRatio(), null, newNode);
+            if(entry.getValue().getDirection() != ImGuiDir.None) {
+                // split the node defined by the newNode id in 2 windows and return the id of the newly split node in the given direction
+                int dock_id = ImGui.dockBuilderSplitNode(newNode.get(), entry.getValue().getDirection(), entry.getValue().getSplitRatio(), oldNode, newNode);
 
-            // add the window defined by the windowLabel to the window with the id dock_id
-            ImGui.dockBuilderDockWindow(entry.getKey().getWindowTitle(), dock_id);
+                // add the window defined by the windowLabel to the window with the id dock_id
+                ImGui.dockBuilderDockWindow(entry.getKey().getWindowTitle(), oldNode.get());
 
-            ImVec2 nodeSize = ImGui.dockBuilderGetNode(dock_id).getSize();
-            entry.getKey().setSize(nodeSize);
+                ImVec2 nodeSize = ImGui.dockBuilderGetNode(dock_id).getSize();
+                entry.getKey().setSize(nodeSize);
+            }else{
+                // split the node defined by the newNode id in 2 windows and return the id of the newly split node in the given direction
+                int dock_id = newNode.get();
+
+                // add the window defined by the windowLabel to the window with the id dock_id
+                ImGui.dockBuilderDockWindow(entry.getKey().getWindowTitle(), newNode.get());
+
+                ImVec2 nodeSize = ImGui.dockBuilderGetNode(dock_id).getSize();
+                entry.getKey().setSize(nodeSize);
+            }
+
         }
 
         ImGui.dockBuilderFinish(dockspace_id);
