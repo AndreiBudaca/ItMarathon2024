@@ -1,4 +1,6 @@
 
+using ItMarathon.Service;
+
 namespace ItMarathonAPI
 {
     public class Program
@@ -13,6 +15,9 @@ namespace ItMarathonAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Configure Service layer
+            builder.Services.AddServices();
 
             var app = builder.Build();
 

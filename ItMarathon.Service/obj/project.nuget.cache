@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "5pi1ANJtHwlir586rVSV1J6fQMPFDIp0WzBnz9hKB9L0y0lCQ52irDr2J++SoLssMm5dQQ5z63hfdnQ/0RKPGw==",
+  "success": true,
+  "projectFilePath": "D:\\Documents\\Facultate\\ItMarathon2024\\ItMarathon.Service\\ItMarathon.Service.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\adybu\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.0\\microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512",
+    "C:\\Users\\adybu\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\adybu\\.nuget\\packages\\system.configuration.configurationmanager\\8.0.0\\system.configuration.configurationmanager.8.0.0.nupkg.sha512",
+    "C:\\Users\\adybu\\.nuget\\packages\\system.diagnostics.eventlog\\8.0.0\\system.diagnostics.eventlog.8.0.0.nupkg.sha512",
+    "C:\\Users\\adybu\\.nuget\\packages\\system.security.cryptography.protecteddata\\8.0.0\\system.security.cryptography.protecteddata.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
