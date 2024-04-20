@@ -1,3 +1,4 @@
+using ItMarathon.Service.HelloWorldService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ItMarathonAPI.Controllers
@@ -6,9 +7,17 @@ namespace ItMarathonAPI.Controllers
     [Route("[controller]")]
     public class HelloWorldController : ControllerBase
     {
-        [HttpGet(Name = "HelloWorld")]
-        public string HelloWorld(string echo)
+        private IHelloWorldService helloWorldService;
+
+        public HelloWorldController(IHelloWorldService helloWorldService)
         {
+            this.helloWorldService = helloWorldService;
+        }
+
+        [HttpGet(Name = "HelloWorld")]
+        public async Task<string> HelloWorld(string echo)
+        {
+            await helloWorldService.AddWordAsync(echo);
             return $"Hello {echo}";
         }
     }

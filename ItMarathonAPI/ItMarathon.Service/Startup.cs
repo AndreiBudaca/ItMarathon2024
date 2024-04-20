@@ -1,4 +1,5 @@
-﻿using ItMarathon.Service.HelloWorldService;
+﻿using ItMarathon.Data;
+using ItMarathon.Service.HelloWorldService;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ItMarathon.Service
@@ -7,6 +8,8 @@ namespace ItMarathon.Service
     {
         public static IServiceCollection AddServices(this IServiceCollection serviceCollection)
         {
+            serviceCollection.AddDatabase();
+
             serviceCollection.AddScoped<IHelloWorldService, HelloWorldService.HelloWorldService>();
 
             return serviceCollection;

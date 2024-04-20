@@ -2,6 +2,6 @@
 {
     public interface IHelloWorldService
     {
-        public string AddWord(string word);
+        public Task<string> AddWordAsync(string word);
     }
 }
