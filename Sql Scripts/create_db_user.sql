@@ -7,3 +7,6 @@ GO
 
 GRANT CONTROL ON schema::dbo TO ItMarathon2024;
 GO
+
+-- dotnet tool install --global dotnet-ef
+-- dotnet ef database update --project ItMarathon.Data --startup-project .
