@@ -39,7 +39,7 @@ namespace ItMarathon.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HelloWorlds");
+                    b.ToTable("HelloWorlds", (string)null);
                 });
 #pragma warning restore 612, 618
         }

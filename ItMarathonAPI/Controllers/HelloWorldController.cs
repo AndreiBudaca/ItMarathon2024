@@ -14,7 +14,7 @@ namespace ItMarathonAPI.Controllers
             this.helloWorldService = helloWorldService;
         }
 
-        [HttpGet(Name = "HelloWorld")]
+        [HttpGet]
         public async Task<string> HelloWorld(string echo)
         {
             await helloWorldService.AddWordAsync(echo);

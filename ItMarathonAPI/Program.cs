@@ -1,5 +1,9 @@
 
+using ItMarathon.Core;
 using ItMarathon.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ItMarathonAPI
 {
@@ -18,6 +22,21 @@ namespace ItMarathonAPI
 
             // Configure Service layer
             builder.Services.AddServices();
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = AppConfig.JwtIssuer,
+                    ValidAudience = AppConfig.JwtIssuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppConfig.JwtSecret))
+                };
+            });
 
             var app = builder.Build();
 
