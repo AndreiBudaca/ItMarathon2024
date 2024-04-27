@@ -2,6 +2,7 @@ package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.flag.ImGuiDir;
 import lombok.Getter;
 import lombok.Setter;
 import org.tuiasi.engine.networking.APICaller;
@@ -16,9 +17,11 @@ import org.tuiasi.engine.ui.components.basicComponents.checkbox.CheckboxWithTitl
 import org.tuiasi.engine.ui.components.basicComponents.dropdown.DropdownWithTitle;
 import org.tuiasi.engine.ui.components.basicComponents.label.Label;
 import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchbarWithHint;
+import org.tuiasi.engine.ui.uiWindows.Page;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LoginWindow extends UIWindow {
 
@@ -113,8 +116,16 @@ public class LoginWindow extends UIWindow {
                     boolean loginStatus = apiCaller.login(new LoginDTO(emailInput.getSearchText().get(), passwordInput.getSearchText().get()));
                     if(!loginStatus)
                         actionStatusLabel.setLabel("Logarea a esuat. Verifica credentialele");
-                    else
+                    else {
+                        // the student home page
+                        Page studentHomePage = new Page("StudentHomePage",
+                                List.of(
+                                        new StudentHomeWindow("StudentHomeWindow", ImGuiDir.None, 1.0f, true)
+                                )
+                        );
+                        DefaultAppUI.addPage(studentHomePage.getName(), studentHomePage);
                         DefaultAppUI.setCurrentPage("StudentHomePage");
+                    }
                 }
                 else {
                     boolean registerStatus = apiCaller.register(new RegisterDTO(emailInput.getSearchText().get(),

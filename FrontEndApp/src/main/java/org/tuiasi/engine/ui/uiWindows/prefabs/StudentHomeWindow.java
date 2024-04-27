@@ -2,25 +2,26 @@ package org.tuiasi.engine.ui.uiWindows.prefabs;
 
 import imgui.ImVec2;
 import imgui.flag.ImGuiDir;
-import imgui.flag.ImGuiDockNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
-import lombok.Getter;
-import lombok.Setter;
-import org.tuiasi.engine.networking.APICaller;
-import org.tuiasi.engine.networking.OptionalPacksDTO;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.tuiasi.engine.networking.*;
 import org.tuiasi.engine.ui.components.basicComponents.button.Button;
 import org.tuiasi.engine.ui.components.basicComponents.button.ButtonListener;
+import org.tuiasi.engine.ui.components.basicComponents.dropdown.DropdownListener;
 import org.tuiasi.engine.ui.components.basicComponents.dropdown.DropdownWithTitle;
 import org.tuiasi.engine.ui.components.basicComponents.label.Label;
 import org.tuiasi.engine.ui.uiWindows.IUIWindow;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StudentHomeWindow  extends UIWindow {
 
     private OptionalPacksDTO optionalPacks;
     private UIWindow optionalHalfWindow;
+    private Integer[][] packsWithPreferences;
 
     public StudentHomeWindow(String windowTitle) {
         super(windowTitle);
@@ -40,11 +41,34 @@ public class StudentHomeWindow  extends UIWindow {
 
     public StudentHomeWindow(String windowTitle, int dockDirection, float dockRatio, boolean isRootWindow) {
         super(windowTitle, dockDirection, dockRatio, isRootWindow);
-        addPrefabComponents();
 
         APICaller apiCaller = new APICaller();
-        // TODO: Map api response to optionalPacksDTO
-//        apiCaller.getOptionalPacks();
+        optionalPacks = new OptionalPacksDTO();
+
+        JSONArray obj = (JSONArray) apiCaller.getOptionalPacks();
+        // iterate packs
+        for(int i = 0; i < obj.size(); i++) {
+            // get pack
+            JSONObject pack = (JSONObject) obj.get(i);
+            OptionalPackDTO optionalPack = new OptionalPackDTO();
+
+            // iterate optionals in each pack
+            JSONArray options = (JSONArray) pack.get("options");
+            for(int j = 0; j < options.size(); j++) {
+                // get option
+                JSONObject option = (JSONObject) options.get(j);
+
+                // add option to DTO
+                Long preferenceIndex = ((Long)option.get("sortOrder"));
+                OptionalDTO optional = new OptionalDTO(Math.toIntExact((Long)option.get("id")), (String)option.get("name"), (String)option.get("description"), preferenceIndex == null ? 0 : preferenceIndex.intValue());
+                optionalPack.getOptionals().add(optional);
+            }
+
+            // add the optional pack to the optionalPacksDTO
+            optionalPacks.getOptionalPacks().add(optionalPack);
+        }
+
+        addPrefabComponents();
     }
 
 
@@ -54,7 +78,7 @@ public class StudentHomeWindow  extends UIWindow {
         explanationLabel.setRatioedPosition(0.5f, 0.05f);
         addComponent(explanationLabel);
 
-        Label saveResultLabel = new Label("Lorem ipsum");
+        Label saveResultLabel = new Label("");
         saveResultLabel.setRatioedPosition(0.5f, 0.3f);
         saveResultLabel.setFontSize(18);
         addComponent(saveResultLabel);
@@ -65,7 +89,16 @@ public class StudentHomeWindow  extends UIWindow {
         saveButton.setListener(new ButtonListener() {
             @Override
             public void onClick() {
-                // TODO: Send preferences and post response status
+                // se creaza perechi optional-preferinta
+                List<SubjectPreferenceDTO> preference_order_pair = new ArrayList<>();
+                for(int i = 0; i < packsWithPreferences.length; i++) {
+                    for(int j = 0; j < packsWithPreferences[i].length; j++) {
+                        preference_order_pair.add(new SubjectPreferenceDTO(packsWithPreferences[i][j], j));
+                    }
+                }
+                APICaller apiCaller = new APICaller();
+                boolean status = apiCaller.saveOptionals(preference_order_pair);
+                saveResultLabel.setLabel(status ? "Preferintele au fost salvate cu succes!" : "A aparut o eroare. Verifica optiunile");
             }
         });
         addComponent(saveButton);
@@ -76,23 +109,45 @@ public class StudentHomeWindow  extends UIWindow {
         optionalHalfWindow.addFlag(ImGuiWindowFlags.NoMove);
         addDockedWindow(optionalHalfWindow, optionalHalfWindow.getDockPosition(), optionalHalfWindow.getDockRatio());
 
-        int packCount = 3;
-        int optionalInPackCount = 3;
+        int packCount = optionalPacks.getOptionalPacks().size();
+        packsWithPreferences = new Integer[packCount][];
 
         // iterare pachete
         for(int i = 0; i < packCount; i++){
 
-            UIWindow packWindow = new UIWindow("Pachet " + i, i == packCount - 1 ? ImGuiDir.None : ImGuiDir.Left, 1.0f / (packCount-i));
+            UIWindow packWindow = new UIWindow("Pachet " + (i + 1), i == packCount - 1 ? ImGuiDir.None : ImGuiDir.Left, 1.0f / (packCount-i));
 
             packWindow.setDocked(true);
             packWindow.addFlag(ImGuiWindowFlags.NoMove);
 
-            // iterare optionale din pachete
+            List<OptionalDTO> optionals = optionalPacks.getOptionalPacks().get(i).getOptionals();
+            int optionalInPackCount = optionals.size();
+            packsWithPreferences[i] = new Integer[optionalInPackCount];
+
+
+            Integer[] optionalIds = new Integer[optionalInPackCount];
+            String[] optionalNames = new String[optionalInPackCount];
+            String[] optionalDescriptions = new String[optionalInPackCount];
+            Integer[] optionalPreferences = new Integer[optionalInPackCount];
+            for(int j = 0; j < optionalInPackCount; ++ j){
+                optionalIds[j] = optionals.get(j).getId();
+                optionalNames[j] = optionals.get(j).getName();
+                optionalDescriptions[j] = optionals.get(j).getDescription();
+                optionalPreferences[j] = optionals.get(j).getPreferenceIndex();
+            }
+            // creaza dropdownuri pt cate optionale sunt in pachet
             for(int j = 0; j < optionalInPackCount; ++ j) {
-                DropdownWithTitle optionalPack = new DropdownWithTitle("Optiunea " + j, new String[]{"APD", "PBD", "PC2"});
+                int finalI = i;
+                int finalJ = j;
+                DropdownWithTitle optionalPack = new DropdownWithTitle("Optiunea " + (j+1), optionalNames, optionalDescriptions, optionalPreferences[0], new DropdownListener() {
+                    @Override
+                    public void onItemSelected(int index) {
+                        packsWithPreferences[finalI][finalJ] = optionalIds[index];
+                    }
+                });
+
                 optionalPack.setXRatioToWindow(.6f);
-//                optionalPack.setSize(200, 50);
-                optionalPack.setRatioedPosition(0.4f, 0.1f * j);
+                optionalPack.setRatioedPosition(0.4f, 0.2f + 0.15f * j);
                 packWindow.addComponent(optionalPack);
             }
 

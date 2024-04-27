@@ -12,6 +12,7 @@ public class DropdownWithTitle extends IDropdown{
 
     private String label;
     private String[] items;
+    private String[] descriptions;
     private int selectedItemIndex;
     private DropdownListener listener;
 
@@ -20,8 +21,32 @@ public class DropdownWithTitle extends IDropdown{
     public DropdownWithTitle(String label, String[] items) {
         this.label = label;
         this.items = items;
+        this.descriptions = new String[items.length];
         this.selectedItemIndex = 0; // Default to the first item
     }
+
+    public DropdownWithTitle(String label, String[] items, String[] descriptions) {
+        this.label = label;
+        this.items = items;
+        this.descriptions = descriptions;
+        this.selectedItemIndex = 0;
+    }
+
+    public DropdownWithTitle(String label, String[] items, String[] descriptions, int selectedItemIndex) {
+        this.label = label;
+        this.items = items;
+        this.descriptions = descriptions;
+        this.selectedItemIndex = selectedItemIndex;
+    }
+
+    public DropdownWithTitle(String label, String[] items, String[] descriptions, int selectedItemIndex, DropdownListener listener) {
+        this.label = label;
+        this.items = items;
+        this.descriptions = descriptions;
+        this.selectedItemIndex = selectedItemIndex;
+        this.listener = listener;
+    }
+
 
     @Override
     public void render() {
@@ -41,7 +66,7 @@ public class DropdownWithTitle extends IDropdown{
                 // Render the dropdown
                 if(ImGui.isItemHovered(ImGuiHoveredFlags.AllowWhenBlockedByActiveItem | ImGuiHoveredFlags.AllowWhenDisabled
                 | ImGuiHoveredFlags.AllowWhenOverlapped)) {
-                    ImGui.setTooltip(items[i-1]);
+                    ImGui.setTooltip(descriptions[i-1]);
                 }
 
                 boolean isSelected = selectedItemIndex == i;
@@ -59,7 +84,7 @@ public class DropdownWithTitle extends IDropdown{
 
             if(ImGui.isItemHovered(ImGuiHoveredFlags.AllowWhenBlockedByActiveItem | ImGuiHoveredFlags.AllowWhenDisabled
                     | ImGuiHoveredFlags.AllowWhenOverlapped)) {
-                ImGui.setTooltip(items[items.length - 1]);
+                ImGui.setTooltip(descriptions[descriptions.length - 1]);
             }
 
             ImGui.endCombo();
