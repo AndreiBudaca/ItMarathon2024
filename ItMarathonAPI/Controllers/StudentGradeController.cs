@@ -26,6 +26,7 @@ namespace ItMarathon.Api.Controllers
                 StudentId = studentGrade.StudentId,
                 CourseId = studentGrade.CourseId,
                 Grade = studentGrade.Grade,
+                StudyYear = DateTime.Now.Month >= 10 ? DateTime.Now.Year + 1 : DateTime.Now.Year,
             });
 
             return Ok();
@@ -39,6 +40,7 @@ namespace ItMarathon.Api.Controllers
                 StudentId = studentGrade.StudentId,
                 CourseId = studentGrade.CourseId,
                 Grade = studentGrade.Grade,
+                StudyYear = studentGrade.StudyYear,
             });
 
             return Ok();

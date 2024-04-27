@@ -11,6 +11,8 @@ namespace ItMarathon.Data.Entities
 
         public decimal Grade {  get; set; }
 
+        public int StudyYear { get; set; }
+
         public User Student { get; set; }
 
         public Course Course { get; set; }

@@ -11,6 +11,8 @@ namespace ItMarathon.Data.Entities
 
         public int SortOrder { get; set; }
 
+        public int YearOfStudy { get; set; }
+
         public User Student { get; set; }
 
         public Course Optional { get; set; }

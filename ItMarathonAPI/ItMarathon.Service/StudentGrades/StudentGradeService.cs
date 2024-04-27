@@ -22,6 +22,7 @@ namespace ItMarathon.Service.StudentGrades
                 CourseId = studentGrade.CourseId,
                 StudentId = studentGrade.StudentId,
                 Grade = studentGrade.Grade,
+                StudyYear = studentGrade.StudyYear
             });
 
             await unitOfWork.CommitAsync();
@@ -47,6 +48,7 @@ namespace ItMarathon.Service.StudentGrades
             if (dbGrade == null) return;
 
             dbGrade.Grade = studentGradeDto.Grade;
+            dbGrade.StudyYear = studentGradeDto.StudyYear;
 
             await unitOfWork.CommitAsync();
         }

@@ -7,5 +7,7 @@
         public int OptionalId { get; set; }
 
         public int SortOrder { get; set; }
+
+        public int StudyYear { get; set; }
     }
 }
