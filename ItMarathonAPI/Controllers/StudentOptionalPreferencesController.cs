@@ -3,9 +3,9 @@ using ItMarathon.Api.Models.StudentOptionalPreferences;
 using ItMarathon.Core.CustomClaims;
 using ItMarathon.Service.Courses;
 using ItMarathon.Service.StudentOptionalPreferences;
+using ItMarathon.Service.StudentOptionalPreferences.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace ItMarathon.Api.Controllers
@@ -35,7 +35,7 @@ namespace ItMarathon.Api.Controllers
             var userPreferences = await studentOptionalPreferenceService.GetAsync(userId);
             var courses = await coursesService.GetAllAsync(userYearOfStudy + 1, true);
 
-            var packageIds = courses.Select(c => c.OptionalPackage ?? 0).ToList();
+            var packageIds = courses.Select(c => c.OptionalPackage ?? 0).Distinct();
 
             var model = new List<StudentPreferencePackageModel>();
             foreach (var packageId in packageIds)
@@ -64,6 +64,40 @@ namespace ItMarathon.Api.Controllers
             }
 
             return Ok(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePreferences([FromBody] IEnumerable<StudentPreferenceModel> preferences)
+        {
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var userYearOfStudy = int.Parse(User.Claims.FirstOrDefault(c => c.Type == CustomClaims.YearOfStudy)?.Value ?? "0");
+
+            if (preferences.Select(p => p.OptionalId).Distinct().Count() != preferences.Count())
+            {
+                return UnprocessableEntity("Please do not provide duplicate courses");
+            }
+
+            await studentOptionalPreferenceService.UpdatePrefferencesAsync(userId, userYearOfStudy,
+                preferences.Select(p => new StudentOptionalPreferenceDto
+                {
+                    OptionalId = p.OptionalId,
+                    StudentId = userId,
+                    SortOrder = p.SortOrder,
+                })
+            );
+
+            return Ok();
+        }
+
+
+        [HttpDelete]
+        public async Task<IActionResult> DeletePreferences()
+        {
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+
+            await studentOptionalPreferenceService.RemovePrefferencesAsync(userId);
+
+            return Ok();
         }
     }
 }

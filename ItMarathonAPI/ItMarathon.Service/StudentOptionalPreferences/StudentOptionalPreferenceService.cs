@@ -54,7 +54,7 @@ namespace ItMarathon.Service.StudentOptionalPreferences
                 .AnyAsync(c => !c.IsOptional || c.YearOfStudy != (userYearOfStudy + 1));
 
             await Remove(userId);
-            Add(userId, preferences);
+            Add(userId, preferences.OrderByDescending(p => p.SortOrder));
 
             await unitOfWork.CommitAsync();
         }
@@ -62,7 +62,8 @@ namespace ItMarathon.Service.StudentOptionalPreferences
 
         private async Task Remove(int userId)
         {
-            var existingPreferences = await preferencesRepository.Query().Where(p => p.StudentId == userId).ToListAsync();
+            var existingPreferences = await preferencesRepository.Query().Where(p => p.StudentId == userId)
+                .AsNoTracking().ToListAsync();
 
             foreach (var p in existingPreferences)
             {
@@ -77,7 +78,7 @@ namespace ItMarathon.Service.StudentOptionalPreferences
                 preferencesRepository.Add(new StudentOptionalPreference
                 {
                     StudentId = userId,
-                    OptionalId = preferences.ElementAt(i).StudentId,
+                    OptionalId = preferences.ElementAt(i).OptionalId,
                     SortOrder = i
                 });
             }

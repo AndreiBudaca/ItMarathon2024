@@ -1,5 +1,8 @@
-﻿namespace ItMarathon.Data.Entities
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ItMarathon.Data.Entities
 {
+    [Index(nameof(Name), IsUnique = true)]
     public class Course
     {
         public int Id { get; set; }
