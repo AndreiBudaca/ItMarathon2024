@@ -15,11 +15,12 @@ namespace ItMarathon.Service.StudentOptionalPreferences
         private readonly IUnitOfWork unitOfWork;
 
         public StudentOptionalPreferenceService(IRepository<StudentOptionalPreference> preferencesRepository,
-            IRepository<Course> courseRepository, IUnitOfWork unitOfWork)
+            IRepository<Course> courseRepository, IRepository<StudentOptional> optionalRepository, IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
             this.preferencesRepository = preferencesRepository;
             this.courseRepository = courseRepository;
+            this.optionalRepository = optionalRepository;
         }
 
         public async Task AddPrefferencesAsync(int userId, int userYearOfStudy, IEnumerable<StudentOptionalPreferenceDto> preferences)

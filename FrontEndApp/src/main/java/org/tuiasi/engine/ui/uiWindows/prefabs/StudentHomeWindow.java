@@ -139,7 +139,7 @@ public class StudentHomeWindow  extends UIWindow {
             for(int j = 0; j < optionalInPackCount; ++ j) {
                 int finalI = i;
                 int finalJ = j;
-                DropdownWithTitle optionalPack = new DropdownWithTitle("Optiunea " + (j+1), optionalNames, optionalDescriptions, optionalPreferences[0], new DropdownListener() {
+                DropdownWithTitle optionalPack = new DropdownWithTitle("Optiunea " + (j+1), optionalNames, optionalDescriptions, optionalPreferences[j], new DropdownListener() {
                     @Override
                     public void onItemSelected(int index) {
                         packsWithPreferences[finalI][finalJ] = optionalIds[index];
