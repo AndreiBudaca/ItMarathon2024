@@ -55,6 +55,7 @@ namespace ItMarathon.Api.Controllers
                 LastName = user.LastName,
                 Password = user.Password,
                 YearOfStudy = user.YearOfStudy,
+                Semester = DateTime.Now.Month >= 2 && DateTime.Now.Month <= 9 ? 2 : 1,
                 Role = Core.Types.UserRole.Student
             });
 

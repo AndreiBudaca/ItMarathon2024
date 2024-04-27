@@ -24,9 +24,5 @@ namespace ItMarathon.Api.Models.Authentication
         [Required]
         [Range(1, 10, ErrorMessage = "Please provide a valid value for the year of study")]
         public int YearOfStudy {  get; set; }
-
-        [Required]
-        [Range(1, 2, ErrorMessage = "Please provide a valid value for the semester")]
-        public int Semester { get; set; }
     }
 }
