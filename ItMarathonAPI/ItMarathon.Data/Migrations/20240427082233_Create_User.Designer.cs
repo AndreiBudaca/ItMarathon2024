@@ -4,6 +4,7 @@ using ItMarathon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ItMarathon.Data.Migrations
 {
     [DbContext(typeof(ItMarathonContext))]
-    partial class ItMarathonContextModelSnapshot : ModelSnapshot
+    [Migration("20240427082233_Create_User")]
+    partial class Create_User
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,36 +24,6 @@ namespace ItMarathon.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ItMarathon.Data.Entities.Course", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsOptional")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("OptionalPackage")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearOfStudy")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Courses");
-                });
 
             modelBuilder.Entity("ItMarathon.Data.Entities.HelloWorld", b =>
                 {
@@ -97,9 +70,6 @@ namespace ItMarathon.Data.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("Role")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearOfStudy")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

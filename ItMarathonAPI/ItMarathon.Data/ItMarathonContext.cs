@@ -8,5 +8,9 @@ namespace ItMarathon.Data
         public ItMarathonContext(DbContextOptions<ItMarathonContext> options) : base(options) { }
 
         public DbSet<HelloWorld> HelloWorlds { get; set; }
+
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<Course> Courses { get; set; }
     }
 }
