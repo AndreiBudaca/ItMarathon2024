@@ -14,6 +14,8 @@ namespace ItMarathon.Service.Authentication.Dto
 
         public int YearOfStudy {  get; set; }
 
+        public int Semester { get; set; }
+
         public UserRole Role { get; set; }
     }
 }

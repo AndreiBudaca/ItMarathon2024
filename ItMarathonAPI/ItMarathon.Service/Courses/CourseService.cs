@@ -28,7 +28,9 @@ namespace ItMarathon.Service.Courses
                 Name = dbCourse.Name,
                 Description = dbCourse.Description,
                 YearOfStudy = dbCourse.YearOfStudy,
+                Semester = dbCourse.Semester,
                 IsOptional = dbCourse.IsOptional,
+                Credits = dbCourse.Credits,
                 OptionalPackage = dbCourse.OptionalPackage,
             };
         }
@@ -42,7 +44,9 @@ namespace ItMarathon.Service.Courses
                     Name = course.Name,
                     Description = course.Description,
                     YearOfStudy = course.YearOfStudy,
+                    Semester = course.Semester,
                     IsOptional = course.IsOptional,
+                    Credits = course.Credits,
                     OptionalPackage = course.OptionalPackage,
                 }).ToListAsync();
         }
@@ -54,7 +58,9 @@ namespace ItMarathon.Service.Courses
                 Name = course.Name,
                 Description = course.Description,
                 YearOfStudy = course.YearOfStudy,
+                Semester = course.Semester,
                 IsOptional = course.IsOptional,
+                Credits = course.Credits,
                 OptionalPackage = course.OptionalPackage,
             });
 
@@ -82,7 +88,9 @@ namespace ItMarathon.Service.Courses
             dbCourse.Name = course.Name;
             dbCourse.Description = course.Description;
             dbCourse.YearOfStudy = course.YearOfStudy;
+            dbCourse.Semester = course.Semester;
             dbCourse.IsOptional = course.IsOptional;
+            dbCourse.Credits = course.Credits;
             dbCourse.OptionalPackage = course.OptionalPackage;
 
             await unitOfWork.CommitAsync();

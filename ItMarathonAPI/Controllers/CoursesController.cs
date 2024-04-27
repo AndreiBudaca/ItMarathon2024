@@ -29,7 +29,9 @@ namespace ItMarathon.Api.Controllers
                 Name = course.Name,
                 Description = course.Description,
                 YearOfStudy = course.YearOfStudy,
+                Semester = course.Semester,
                 IsOptional = course.IsOptional,
+                Credits = course.Credits,
                 OptionalPackage = course.OptionalPackage,
             }));
         }
@@ -47,7 +49,9 @@ namespace ItMarathon.Api.Controllers
                 Name = course.Name,
                 Description = course.Description,
                 YearOfStudy = course.YearOfStudy,
+                Semester = course.Semester,
                 IsOptional = course.IsOptional,
+                Credits = course.Credits,
                 OptionalPackage = course.OptionalPackage,
             });
         }
@@ -65,7 +69,9 @@ namespace ItMarathon.Api.Controllers
                 Name = course.Name,
                 Description = course.Description,
                 YearOfStudy = course.YearOfStudy,
+                Semester = course.Semester,
                 IsOptional = course.IsOptional,
+                Credits = course.Credits,
                 OptionalPackage = course.OptionalPackage,
             });
 
@@ -85,7 +91,9 @@ namespace ItMarathon.Api.Controllers
                 Name = course.Name,
                 Description = course.Description,
                 YearOfStudy = course.YearOfStudy,
+                Semester = course.Semester,
                 IsOptional = course.IsOptional,
+                Credits = course.Credits,
                 OptionalPackage = course.OptionalPackage,
             });
 

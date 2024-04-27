@@ -18,6 +18,8 @@ namespace ItMarathon.Data.Entities
 
         public int YearOfStudy { get; set; }
 
+        public int Semester { get; set; }
+
         public UserRole Role { get; set; }
     }
 }
