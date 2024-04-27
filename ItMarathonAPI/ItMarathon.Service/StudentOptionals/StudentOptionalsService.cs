@@ -42,7 +42,7 @@ namespace ItMarathon.Service.StudentOptionals
             }).OrderBy(s => s.StudentYearOfStudy)
             .ThenBy(s => s.Preferences.Count == 0 ? 1 : 0)
             .ThenBy(s => s.CreditsCount)
-            .ThenBy(s => s.LastSemesterGradeSum / s.LastSemesterCredits)
+            .ThenBy(s => s.LastSemesterCredits == 0 ? -1 : s.LastSemesterGradeSum / s.LastSemesterCredits)
             .GroupBy(s => s.StudentYearOfStudy);
 
             var studentsCountPerYear = studentsPerYearOfStudy
@@ -52,7 +52,7 @@ namespace ItMarathon.Service.StudentOptionals
                 .Where(c => c.IsOptional)
                 .ToListAsync();
 
-            var studentOptional = new List<StudentOptional>();
+            var studentOptionals = new List<StudentOptional>();
 
             foreach (var studentYearOfStudyGroup in studentsPerYearOfStudy)
             {
@@ -79,7 +79,7 @@ namespace ItMarathon.Service.StudentOptionals
                             var optionalIndex = optionalGroup.ToList().IndexOf(optional);
                             if (freeSlots[optionalIndex] == 0) continue;
 
-                            studentOptional.Add(new StudentOptional
+                            studentOptionals.Add(new StudentOptional
                             {
                                 StudentId = student.StudentId,
                                 OptionalId = optional.Id,
@@ -99,7 +99,7 @@ namespace ItMarathon.Service.StudentOptionals
 
                             freeSlots[optionalIndex] -= 1;
 
-                            studentOptional.Add(new StudentOptional
+                            studentOptionals.Add(new StudentOptional
                             {
                                 StudentId = student.StudentId,
                                 OptionalId = optional.Id,
@@ -109,6 +109,13 @@ namespace ItMarathon.Service.StudentOptionals
                     }
                 }
             }
+
+            foreach (var studentOptional in studentOptionals)
+            {
+                studentOptionalsRepository.Add(studentOptional);
+            }
+
+            await unitOfWork.CommitAsync();
         }
 
         public async Task<IEnumerable<StudentOptionalDto>> GetOptionals(int studyYear, int userId)
