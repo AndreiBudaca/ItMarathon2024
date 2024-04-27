@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ItMarathon.Api.Controllers
 {
@@ -20,8 +21,11 @@ namespace ItMarathon.Api.Controllers
         public async Task<IActionResult> GetNextYearOptionals()
         {
             var yearOfStudy = DateTime.Now.Month >= 10 ? DateTime.Now.Year + 2 : DateTime.Now.Year + 1;
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
 
-            return Ok();
+            var optionals = await studentOptionalsService.GetOptionals(yearOfStudy, userId);
+
+            return Ok(optionals);
         }
 
         [HttpDelete]

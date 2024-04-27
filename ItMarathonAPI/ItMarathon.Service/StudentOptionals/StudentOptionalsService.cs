@@ -1,6 +1,7 @@
 ﻿using ItMarathon.Data.Entities;
 using ItMarathon.Data.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ItMarathon.Service.StudentOptionals
 {
@@ -110,9 +111,26 @@ namespace ItMarathon.Service.StudentOptionals
             }
         }
 
-        public Task<IEnumerable<StudentOptionalDto>> GetOptionals(int studyYear)
+        public async Task<IEnumerable<StudentOptionalDto>> GetOptionals(int studyYear, int userId)
         {
-            throw new NotImplementedException();
+            return await studentOptionalsRepository.Query()
+                .Where(op => op.StudyYear == studyYear && op.StudentId == userId)
+                .Select(op => new StudentOptionalDto
+                {
+                    Course = new Courses.Dto.CourseDto
+                    {
+                        Id = op.Optional.Id,
+                        Name = op.Optional.Name,
+                        Description = op.Optional.Description
+                    },
+                    Student = new Authentication.Dto.UserDto
+                    {
+                        Id = op.Student.Id,
+                        FirstName = op.Student.FirstName,
+                        LastName = op.Student.LastName,
+                    }
+                })
+                .ToListAsync();
         }
 
         public async Task RemoveOptionals(int studyYear)
