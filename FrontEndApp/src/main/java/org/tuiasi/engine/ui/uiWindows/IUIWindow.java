@@ -2,6 +2,7 @@ package org.tuiasi.engine.ui.uiWindows;
 
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.flag.ImGuiDir;
 import imgui.flag.ImGuiWindowFlags;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +26,8 @@ public abstract class IUIWindow {
 
     boolean isFirstTime = true;
     boolean isDocked = false;
+    int dockPosition = ImGuiDir.None;
+    float dockRatio = 1.0f;
 
     public IUIWindow(String windowTitle) {
         this.windowTitle = windowTitle;
@@ -36,6 +39,15 @@ public abstract class IUIWindow {
         this.relativePosition = relativePosition;
         this.size = size;
         addFlag(ImGuiWindowFlags.NoMove);
+    }
+
+    public IUIWindow(String windowTitle, int dockPosition, float dockRatio){
+        this.windowTitle = windowTitle;
+        this.relativePosition = new ImVec2();
+        this.size = new ImVec2();
+
+        this.dockPosition = dockPosition;
+        this.dockRatio = dockRatio;
     }
 
     public void addComponent(IComponent component) {

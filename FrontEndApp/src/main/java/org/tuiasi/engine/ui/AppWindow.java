@@ -16,6 +16,9 @@ import org.lwjgl.opengl.GL;
 import org.tuiasi.engine.global.IO.KeyboardHandler;
 import org.tuiasi.engine.global.WindowVariables;
 
+import java.util.HashMap;
+import java.util.List;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -37,20 +40,20 @@ public class AppWindow {
 
     private String glslVersion = null;
     private long windowID;
-    private DefaultEngineEditorUI defaultEngineEditorUI;
+    private DefaultAppUI defaultAppUI;
 
     WindowVariables windowVariables;
 
-    public static ImFont appFont;
+    public static HashMap<Integer, ImFont> appFonts;
 
-    public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultEngineEditorUI defaultEngineEditorUI){
+    public AppWindow(int width, int height, String title, Vector4f clearColor, DefaultAppUI defaultAppUI){
         //Init class variables
         this.width = width;
         this.height = height;
         this.title = title;
         this.clearColor = clearColor;
         this.resized = false;
-        this.defaultEngineEditorUI = defaultEngineEditorUI;
+        this.defaultAppUI = defaultAppUI;
     }
 
     public void init() {
@@ -106,16 +109,20 @@ public class AppWindow {
 
     private void initImGui() {
         ImGui.createContext();
-        ImGuiIO io = ImGui.getIO();
-        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
-        io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
-        io.addConfigFlags(ImGuiConfigFlags.DpiEnableScaleFonts);
+        ImGuiIO imGuiIO = ImGui.getIO();
+        imGuiIO.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+        imGuiIO.addConfigFlags(ImGuiConfigFlags.DockingEnable);
+        imGuiIO.addConfigFlags(ImGuiConfigFlags.DpiEnableScaleFonts);
 
 
         // add the font Nihonium113-Console.ttf found in resources to the atlas
         ImFontConfig fontConfig = new ImFontConfig();
-        fontConfig.setGlyphRanges(io.getFonts().getGlyphRangesDefault());
-        appFont = io.getFonts().addFontFromFileTTF("src/main/resources/Nihonium113-Console.ttf", 14, fontConfig);
+        fontConfig.setGlyphRanges(imGuiIO.getFonts().getGlyphRangesDefault());
+
+        appFonts = new HashMap<>();
+        for(int i = 16; i <= 64; ++ i)
+            appFonts.put(i, imGuiIO.getFonts().addFontFromFileTTF("src/main/resources/Nihonium113-Console.ttf", i, fontConfig));
+
     }
 
 
@@ -133,7 +140,7 @@ public class AppWindow {
             windowVariables.updateGlobalVariables(windowID);
 
             // render the UI
-            defaultEngineEditorUI.renderUI();
+            defaultAppUI.renderUI();
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());
 
