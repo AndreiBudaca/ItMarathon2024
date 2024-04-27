@@ -4,10 +4,16 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import lombok.Getter;
 import lombok.Setter;
+import org.tuiasi.engine.networking.APICaller;
+import org.tuiasi.engine.networking.LoginDTO;
+import org.tuiasi.engine.networking.RegisterDTO;
 import org.tuiasi.engine.ui.AppWindow;
+import org.tuiasi.engine.ui.DefaultAppUI;
+import org.tuiasi.engine.ui.components.IComponent;
 import org.tuiasi.engine.ui.components.basicComponents.button.Button;
 import org.tuiasi.engine.ui.components.basicComponents.button.ButtonListener;
 import org.tuiasi.engine.ui.components.basicComponents.checkbox.CheckboxWithTitle;
+import org.tuiasi.engine.ui.components.basicComponents.dropdown.DropdownWithTitle;
 import org.tuiasi.engine.ui.components.basicComponents.label.Label;
 import org.tuiasi.engine.ui.components.basicComponents.searchbar.SearchbarWithHint;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
@@ -42,47 +48,107 @@ public class LoginWindow extends UIWindow {
 
     @Override
     protected void addPrefabComponents(){
+        configurePage(mode);
+    }
 
-        Label loginLabel = new Label(mode, false, 32);
+    private void updatePage(){
+        clearComponents();
+        mode = mode.equals("Login") ? "Register" : "Login";
+        configurePage(mode);
+    }
+
+    private void configurePage(String mode){
+
+        Label loginLabel = new Label("Welcome!", false, 32);
         loginLabel.setRatioedPosition(0.5f, 0.2f);
+        addComponent(loginLabel);
 
         SearchbarWithHint emailInput = new SearchbarWithHint("Email", "Email", false);
         emailInput.setSize(300, 50);
         emailInput.setRatioedPosition(0.5f, 0.3f);
+        addComponent(emailInput);
 
         SearchbarWithHint passwordInput = new SearchbarWithHint("Password", "Password", true);
         passwordInput.setSize(300, 50);
         passwordInput.setRatioedPosition(0.5f,  0.33f);
+        addComponent(passwordInput);
+
+        SearchbarWithHint numeInput = new SearchbarWithHint();
+        SearchbarWithHint prenumeInput = new SearchbarWithHint();
+        DropdownWithTitle anInput = new DropdownWithTitle();
+
+        if(mode.equals("Register")){
+            numeInput = new SearchbarWithHint("Nume", "Nume", false);
+            numeInput.setSize(300, 50);
+            numeInput.setRatioedPosition(0.5f, 0.36f);
+            addComponent(numeInput);
+
+            prenumeInput = new SearchbarWithHint("Prenume", "Prenume", false);
+            prenumeInput.setSize(300, 50);
+            prenumeInput.setRatioedPosition(0.5f, 0.39f);
+            addComponent(prenumeInput);
+
+            anInput = new DropdownWithTitle("An studiu", new String[]{"1", "2", "3", "4"});
+            anInput.setSize(100, 50);
+            anInput.setRatioedPosition(0.5f, 0.42f);
+            addComponent(anInput);
+        }
+
+        Label actionStatusLabel = new Label("");
+        actionStatusLabel.setSize(loginLabel.getWidth() + 100,  50);
+        actionStatusLabel.setRatioedPosition(0.5f,  mode.equals("Register") ? 0.50f : 0.42f);
+        addComponent(actionStatusLabel);
 
         Button loginButton = new Button(mode);
-        loginButton.setSize(loginLabel.getWidth() + 100, 50);
-        loginButton.setRatioedPosition(0.5f,  0.37f);
+        loginButton.setSize(loginLabel.getWidth() + 100,  50);
+        loginButton.setRatioedPosition(0.5f,  mode.equals("Register") ? 0.45f : 0.37f);
+        SearchbarWithHint finalNumeInput = numeInput;
+        SearchbarWithHint finalPrenumeInput = prenumeInput;
+        DropdownWithTitle finalAnInput = anInput;
+        loginButton.setListener(new ButtonListener() {
+            @Override
+            public void onClick() {
+                APICaller apiCaller = new APICaller();
+                if(mode.equals("Login")) {
+                    boolean loginStatus = apiCaller.login(new LoginDTO(emailInput.getSearchText().get(), passwordInput.getSearchText().get()));
+                    if(!loginStatus)
+                        actionStatusLabel.setLabel("Logarea a esuat. Verifica credentialele");
+                    else
+                        DefaultAppUI.setCurrentPage("StudentHomePage");
+                }
+                else {
+                    boolean registerStatus = apiCaller.register(new RegisterDTO(emailInput.getSearchText().get(),
+                                    passwordInput.getSearchText().get(),
+                                    finalNumeInput.getSearchText().get(),
+                                    finalPrenumeInput.getSearchText().get(),
+                                    finalAnInput.getSelectedItemIndex() + 1
+                            )
+                    );
+                    if(registerStatus)
+                        actionStatusLabel.setLabel("Inregistrarea a fost facuta cu success");
+                    else
+                        actionStatusLabel.setLabel("Datele introduse sunt invalide");
+                }
+            }
+        });
+        addComponent(loginButton);
 
-        Label switcherLabel = new Label(mode.equals("Login") ? "Nu ai cont? " : "Ai deja cont?", true, 16);
-        switcherLabel.setRatioedPosition(0.5f, 0.45f);
+
+
+        Label switcherLabel = new Label(mode.equals("Login") ? "Nu ai cont?" : "Ai deja cont?", true, 16);
+        switcherLabel.setRatioedPosition(0.5f, 0.6f);
+        addComponent(switcherLabel);
 
         Button switcherButton = new Button(mode.equals("Login") ? "Inregistreaza-te" : "Logheaza-te");
         switcherButton.setSize(300, 40);
-        switcherButton.setRatioedPosition(0.5f,  0.5f);
+        switcherButton.setRatioedPosition(0.5f,  0.65f);
         switcherButton.setListener(new ButtonListener() {
             @Override
             public void onClick() {
-                mode = mode.equals("Login") ? "Register" : "Login";
                 updatePage();
             }
         });
-
-        addComponent(loginLabel);
-        addComponent(emailInput);
-        addComponent(passwordInput);
-        addComponent(loginButton);
-        addComponent(switcherLabel);
         addComponent(switcherButton);
-    }
-
-    private void updatePage(){
-        setComponents(new ArrayList<>());
-        addPrefabComponents();
     }
 
     @Override

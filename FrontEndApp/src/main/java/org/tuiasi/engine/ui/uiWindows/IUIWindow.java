@@ -54,6 +54,10 @@ public abstract class IUIWindow {
         components.add(component);
     }
 
+    public void clearComponents(){
+        components.clear();
+    }
+
     public IComponent getComponentByLabel(String label){
         for (IComponent component : components) {
             if (component.getLabel().equals(label)) {

@@ -1,20 +1,21 @@
 package org.tuiasi.engine.networking;
 
+import org.json.simple.JSONObject;
+
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class APICaller {
 
     HttpClient client;
+    public static String current_jwt;
 
     public APICaller(){
         // Create a trust manager that trusts all certificates
@@ -51,7 +52,6 @@ public class APICaller {
     }
 
     public void testFunc(){
-
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI("https://localhost:7262/HelloWorld" + "?echo=John"))
@@ -70,5 +70,63 @@ public class APICaller {
 
     }
 
+    public boolean login(LoginDTO loginDTO){
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("email", loginDTO.email);
+            obj.put("password", loginDTO.password);
+
+            System.out.println(obj.toJSONString());
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .POST(HttpRequest.BodyPublishers.ofString(obj.toJSONString()))
+                    .uri(new URI("https://localhost:7262/api/Authentication/Login"))
+                    .header("accept", "application/json")
+                    .header("content-type", "application/json")
+                    .build();
+
+            client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenApply(HttpResponse::body)
+                    .thenAccept(response -> {
+                        current_jwt = response;
+                    })
+                    .join();
+
+            System.out.println(current_jwt);
+            return !current_jwt.equals("The email / password combination is invalid");
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public boolean register(RegisterDTO registerDTO){
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("email", registerDTO.email);
+            obj.put("password", registerDTO.password);
+            obj.put("yearOfStudy", Integer.valueOf(registerDTO.yearOfStudy));
+            obj.put("firstName", registerDTO.firstName);
+            obj.put("lastName", registerDTO.lastName);
+
+            System.out.println(obj.toJSONString());
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .POST(HttpRequest.BodyPublishers.ofString(obj.toJSONString()))
+                    .uri(new URI("https://localhost:7262/api/Authentication/Register"))
+                    .header("accept", "application/json")
+                    .header("content-type", "application/json")
+                    .build();
+
+            return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenApply(HttpResponse::statusCode)
+                    .join() == 200;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 }

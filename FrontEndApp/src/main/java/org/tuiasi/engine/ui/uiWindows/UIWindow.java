@@ -79,8 +79,8 @@ public class UIWindow extends IUIWindow{
 
 
         // render components inside
-        for (IComponent component : getComponents()) {
-            component.render();
+        for(int i = 0; i < getComponents().size(); ++ i){
+            getComponents().get(i).render();
         }
 
         // create dockspace

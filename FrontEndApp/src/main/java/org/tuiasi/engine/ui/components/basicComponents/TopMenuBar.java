@@ -11,6 +11,7 @@ public class TopMenuBar extends IComponent {
     public String getLabel() {
         return "TopMenuBar";
     }
+    public void setLabel(String label){}
 
     @Override
     public void render() {

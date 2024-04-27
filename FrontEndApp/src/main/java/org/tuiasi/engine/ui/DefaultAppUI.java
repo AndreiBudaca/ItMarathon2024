@@ -20,8 +20,8 @@ public class DefaultAppUI {
     private UIWindow mainWindow;
 
     private TopMenuBar topMenuBar;
-    private HashMap<String, Page> pages;
-    private Page currentPage;
+    private static HashMap<String, Page> pages;
+    private static Page currentPage;
     boolean isSetup = false;
 
     public DefaultAppUI() {
@@ -29,12 +29,22 @@ public class DefaultAppUI {
         pages = new HashMap<>();
 
         // create all pages in application
+
+        // the login page
         Page loginPage = new Page("LoginPage",
                 List.of(
                             new LoginWindow("Login Window", ImGuiDir.None, 1.0f, true)
-                        )
+                )
         );
         pages.put(loginPage.getName(), loginPage);
+
+        // the student home page
+        Page studentHomePage = new Page("StudentHomePage",
+                List.of(
+
+                )
+        );
+        pages.put(studentHomePage.getName(), studentHomePage);
 
         // set current page
         currentPage = pages.get("LoginPage");
@@ -46,6 +56,10 @@ public class DefaultAppUI {
             mainWindow.addDockedWindow(window, window.getDockPosition(), window.getDockRatio());
         }
 
+    }
+
+    public static void setCurrentPage(String pageName){
+        currentPage = pages.get(pageName);
     }
 
     public void renderUI() {
