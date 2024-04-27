@@ -1,12 +1,24 @@
-﻿namespace ItMarathon.Api.Models.Authentication
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ItMarathon.Api.Models.Authentication
 {
     public class UserModel
     {
-        public string Username { get; set; }
-
+        [Required]
+        [EmailAddress (ErrorMessage = "Please provide a valid email address")]
         public string Email { get; set; }
 
-        public string Password { get; set; }
+        [Required]
+        [MaxLength(50, ErrorMessage = "First name must have less then 50 characters")]
+        public string FirstName {  get; set; }
 
+        [Required]
+        [MaxLength(50, ErrorMessage = "Last name must have less then 50 characters")]
+        public string LastName {  get; set; }
+
+        [Required]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long")]
+        [MaxLength(50, ErrorMessage = "Password must have less then 50 characters")]
+        public string Password { get; set; }
     }
 }

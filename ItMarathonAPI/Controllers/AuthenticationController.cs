@@ -1,8 +1,11 @@
 ﻿using ItMarathon.Api.Models.Authentication;
 using ItMarathon.Core;
+using ItMarathon.Service.Authentication;
+using ItMarathon.Service.Authentication.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,51 +16,53 @@ namespace ItMarathon.Api.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+        private readonly IAuthenticationService authenticationService;
+
+        public AuthenticationController(IAuthenticationService authenticationService)
+        {
+            this.authenticationService = authenticationService;
+        }
+
         [AllowAnonymous]
         [HttpPost("Login")]
-        public IActionResult Login([FromBody] UserModel login)
+        public async Task<IActionResult> Login([FromBody] LoginUserModel login)
         {
-            var user = AuthenticateUser(login);
-
-            if (user != null)
+            var user = await authenticationService.LoginAsync(new LoginUserDto
             {
-                var tokenString = GenerateJSONWebToken(user);
-                return Ok(new { token = tokenString });
-            }
+                Email = login.Email,
+                Password = login.Password
+            });
 
-            return Unauthorized();
+            if (user == null) return Unauthorized("The email / password combination is invalid");
+
+            var token = authenticationService.GenerateJSONWebToken(user);
+            return Ok(token);
         }
 
-        private string GenerateJSONWebToken(UserModel userInfo)
+        [AllowAnonymous]
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] UserModel user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppConfig.JwtSecret));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[] 
+            if (!ModelState.IsValid)
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Username),
-                new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-            var token = new JwtSecurityToken(AppConfig.JwtIssuer,
-              AppConfig.JwtIssuer,
-              claims,
-              expires: DateTime.Now.AddDays(1),
-              signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private UserModel AuthenticateUser(UserModel login)
-        {
-            UserModel user = default;
-
-            if (login.Username == "Test")
-            {
-                user = new UserModel { Username = "Jignesh Trivedi", Email = "test.btest@gmail.com" };
+                return BadRequest(ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage);
             }
-            return user;
+
+            var error = await authenticationService.RegisterAsync(new CreateUserDto
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Password = user.Password,
+                Role = Core.Types.UserRole.Student
+            });
+
+            if (String.IsNullOrEmpty(error))
+            {
+                return Ok();
+            }
+
+            return BadRequest(error);
         }
     }
 }

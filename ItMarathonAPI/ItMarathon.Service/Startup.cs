@@ -1,4 +1,5 @@
 ﻿using ItMarathon.Data;
+using ItMarathon.Service.Authentication;
 using ItMarathon.Service.HelloWorldService;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,7 @@ namespace ItMarathon.Service
             serviceCollection.AddDatabase();
 
             serviceCollection.AddScoped<IHelloWorldService, HelloWorldService.HelloWorldService>();
+            serviceCollection.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return serviceCollection;
         }
