@@ -1,6 +1,9 @@
 package org.tuiasi.engine.networking;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -122,6 +125,33 @@ public class APICaller {
             return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenApply(HttpResponse::statusCode)
                     .join() == 200;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public JSONObject getOptionalPacks(){
+        try {
+            JSONParser parser = new JSONParser();
+            JSONObject obj;
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(new URI("https://localhost:7262/api/OptionalPacks"))
+                    .header("accept", "application/json")
+                    .header("content-type", "application/json")
+                    .header("Authorization", "Bearer " + current_jwt)
+                    .build();
+
+            String response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenApply(HttpResponse::body)
+                    .join();
+
+            obj = (JSONObject) parser.parse(response);
+            System.out.println(obj.toJSONString());
+            return obj;
 
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -1,6 +1,7 @@
 package org.tuiasi.engine.ui.components.basicComponents.dropdown;
 
 import imgui.ImGui;
+import imgui.flag.ImGuiHoveredFlags;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,8 @@ public class DropdownWithTitle extends IDropdown{
     private int selectedItemIndex;
     private DropdownListener listener;
 
+    private float xRatioToWindow = 0f;
+
     public DropdownWithTitle(String label, String[] items) {
         this.label = label;
         this.items = items;
@@ -22,15 +25,28 @@ public class DropdownWithTitle extends IDropdown{
 
     @Override
     public void render() {
-        ImGui.setNextItemWidth(200);
-        ImGui.setCursorPosX((ImGui.getWindowSizeX() - getWidth()) * getRatioX() - 100);
+        if(xRatioToWindow != 0f)
+            setWidth(ImGui.getWindowSizeX() * xRatioToWindow);
+
+        ImGui.setNextItemWidth(getWidth());
+
+        ImGui.setCursorPosX((ImGui.getWindowSizeX() - getWidth()) * getRatioX());
         ImGui.setCursorPosY((ImGui.getWindowSizeY() - getHeight()) * getRatioY());
 
-        // Render the dropdown
+
         if (ImGui.beginCombo(label + "##Dropdown", items[selectedItemIndex])) {
+
             for (int i = 0; i < items.length; i++) {
+
+                // Render the dropdown
+                if(ImGui.isItemHovered(ImGuiHoveredFlags.AllowWhenBlockedByActiveItem | ImGuiHoveredFlags.AllowWhenDisabled
+                | ImGuiHoveredFlags.AllowWhenOverlapped)) {
+                    ImGui.setTooltip(items[i-1]);
+                }
+
                 boolean isSelected = selectedItemIndex == i;
                 if (ImGui.selectable(items[i] + "##OptionOfDropdown_" + label, isSelected)) {
+
                     selectedItemIndex = i;
                     if (listener != null) {
                         listener.onItemSelected(i);
@@ -40,6 +56,12 @@ public class DropdownWithTitle extends IDropdown{
                     ImGui.setItemDefaultFocus();
                 }
             }
+
+            if(ImGui.isItemHovered(ImGuiHoveredFlags.AllowWhenBlockedByActiveItem | ImGuiHoveredFlags.AllowWhenDisabled
+                    | ImGuiHoveredFlags.AllowWhenOverlapped)) {
+                ImGui.setTooltip(items[items.length - 1]);
+            }
+
             ImGui.endCombo();
         }
     }

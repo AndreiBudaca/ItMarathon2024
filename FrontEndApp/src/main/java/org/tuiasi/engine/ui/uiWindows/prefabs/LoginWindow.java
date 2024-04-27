@@ -88,7 +88,7 @@ public class LoginWindow extends UIWindow {
             prenumeInput.setRatioedPosition(0.5f, 0.39f);
             addComponent(prenumeInput);
 
-            anInput = new DropdownWithTitle("An studiu", new String[]{"1", "2", "3", "4"});
+            anInput = new DropdownWithTitle("An studiu", new String[]{"1", "2", "3"});
             anInput.setSize(100, 50);
             anInput.setRatioedPosition(0.5f, 0.42f);
             addComponent(anInput);

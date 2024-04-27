@@ -10,6 +10,7 @@ import org.tuiasi.engine.ui.uiWindows.IUIWindow;
 import org.tuiasi.engine.ui.uiWindows.Page;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 import org.tuiasi.engine.ui.uiWindows.prefabs.LoginWindow;
+import org.tuiasi.engine.ui.uiWindows.prefabs.StudentHomeWindow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Getter @Setter
 public class DefaultAppUI {
-    private UIWindow mainWindow;
+    private static UIWindow mainWindow;
 
     private TopMenuBar topMenuBar;
     private static HashMap<String, Page> pages;
@@ -41,13 +42,13 @@ public class DefaultAppUI {
         // the student home page
         Page studentHomePage = new Page("StudentHomePage",
                 List.of(
-
+                            new StudentHomeWindow("Student Home Window", ImGuiDir.None, 1.0f, true)
                 )
         );
         pages.put(studentHomePage.getName(), studentHomePage);
 
         // set current page
-        currentPage = pages.get("LoginPage");
+        currentPage = pages.get("StudentHomePage");
 
         // initialize main window and add all docked windows from the current page
         mainWindow = new UIWindow("Main Window", new ImVec2(0, 0), null, true);
@@ -60,6 +61,12 @@ public class DefaultAppUI {
 
     public static void setCurrentPage(String pageName){
         currentPage = pages.get(pageName);
+        // initialize main window and add all docked windows from the current page
+        mainWindow = new UIWindow("Main Window", new ImVec2(0, 0), null, true);
+        mainWindow.setDocked(true);
+        for(IUIWindow window: currentPage.getIuiWindows()){
+            mainWindow.addDockedWindow(window, window.getDockPosition(), window.getDockRatio());
+        }
     }
 
     public void renderUI() {
