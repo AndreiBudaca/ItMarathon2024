@@ -1,10 +1,12 @@
-
 using ItMarathon.Core;
 using ItMarathon.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ItMarathonAPI
 {
@@ -72,6 +74,33 @@ namespace ItMarathonAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseExceptionHandler(exceptionHandlerApp =>
+            {
+                exceptionHandlerApp.Run(async context =>
+                {
+                    // using static System.Net.Mime.MediaTypeNames;
+                    context.Response.ContentType = Text.Plain;
+
+                    var exceptionHandlerPathFeature =
+                        context.Features.Get<IExceptionHandlerPathFeature>();
+
+                    if (exceptionHandlerPathFeature?.Error is InvalidOperationException)
+                    {
+                        context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+                        await context.Response.WriteAsync("Your data couldn't be saved. Check your fields and try again");
+                    }
+
+                    if (exceptionHandlerPathFeature?.Error is Exception)
+                    {
+                        context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+                        await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.Message);
+                    }
+
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    await context.Response.WriteAsync("An error occured. Please try again");
+                });
+            });
 
             app.UseHttpsRedirection();
 

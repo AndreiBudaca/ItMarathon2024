@@ -1,7 +1,8 @@
 ﻿using ItMarathon.Data;
 using ItMarathon.Service.Authentication;
 using ItMarathon.Service.Courses;
-using ItMarathon.Service.HelloWorldService;
+using ItMarathon.Service.StudentGrades;
+using ItMarathon.Service.StudentOptionalPreferences;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ItMarathon.Service
@@ -12,9 +13,10 @@ namespace ItMarathon.Service
         {
             serviceCollection.AddDatabase();
 
-            serviceCollection.AddScoped<IHelloWorldService, HelloWorldService.HelloWorldService>();
             serviceCollection.AddScoped<IAuthenticationService, AuthenticationService>();
             serviceCollection.AddScoped<ICoursesService, CourseService>();
+            serviceCollection.AddScoped<IStudentGradesService, StudentGradeService>();
+            serviceCollection.AddScoped<IStudentOptionalPreferenceService, StudentOptionalPreferenceService>();
 
             return serviceCollection;
         }

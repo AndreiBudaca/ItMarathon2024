@@ -21,5 +21,10 @@ namespace ItMarathon.Data.Entities
         public int Semester { get; set; }
 
         public UserRole Role { get; set; }
+
+        public ICollection<StudentGrade> Grades { get; set; }
+        
+        public ICollection<StudentOptionalPreference> StudentOptionalPreferences { get; set; }
+
     }
 }

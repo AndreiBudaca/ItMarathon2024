@@ -17,5 +17,9 @@
         public bool IsOptional { get; set; }
 
         public int? OptionalPackage { get; set; }
+
+        public ICollection<StudentGrade> Grades { get; set; }
+
+        public ICollection<StudentOptionalPreference> StudentOptionalPreferences { get; set; }
     }
 }
