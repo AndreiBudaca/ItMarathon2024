@@ -16,4 +16,8 @@
 		<ProjectReference Include="..\ItMarathon.Data\ItMarathon.Data.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="StudentOptionals\Dto\" />
+	</ItemGroup>
+
 </Project>

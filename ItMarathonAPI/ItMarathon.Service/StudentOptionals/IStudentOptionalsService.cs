@@ -4,7 +4,7 @@ namespace ItMarathon.Service.StudentOptionals
 {
     public interface IStudentOptionalsService
     {
-        //public Task<IEnumerable<StudentOptionalDto>> Get
+        public Task<IEnumerable<StudentOptionalDto>> GetOptionals(int studyYear);
 
         public Task DistributeStudents(int studyYear);
 

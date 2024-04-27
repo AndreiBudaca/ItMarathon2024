@@ -110,6 +110,11 @@ namespace ItMarathon.Service.StudentOptionals
             }
         }
 
+        public Task<IEnumerable<StudentOptionalDto>> GetOptionals(int studyYear)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task RemoveOptionals(int studyYear)
         {
             var optionals = await studentOptionalsRepository.Query()
