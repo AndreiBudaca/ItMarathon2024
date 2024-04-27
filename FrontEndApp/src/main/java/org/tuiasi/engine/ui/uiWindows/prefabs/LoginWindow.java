@@ -118,10 +118,11 @@ public class LoginWindow extends UIWindow {
                     if(!loginStatus)
                         actionStatusLabel.setLabel("Logarea a esuat. Verifica credentialele");
                     else {
+
                         String[] chunks = APICaller.current_jwt.split("\\.");
                         Base64.Decoder decoder = Base64.getUrlDecoder();
 
-//                        String header = new String(decoder.decode(chunks[0]));
+                        String header = new String(decoder.decode(chunks[0]));
                         String payload = new String(decoder.decode(chunks[1]));
 
                         if(payload.contains("Student")) {

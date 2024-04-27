@@ -90,13 +90,12 @@ public class APICaller {
                     .build();
 
             client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                    .thenApply(HttpResponse::body)
                     .thenAccept(response -> {
-                        current_jwt = response.substring(1, response.length()-1);
+                        current_jwt = response.body().substring(1, response.body().length()-1);
                     })
                     .join();
 
-            return !current_jwt.equals("The email / password combination is invalid");
+            return !current_jwt.contains("error") ;
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -145,11 +144,10 @@ public class APICaller {
                     .header("Authorization", "Bearer " + current_jwt)
                     .build();
 
+
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if(response.statusCode() == 422){
-                return null;
-            }
+            System.out.println(response.statusCode());
 
             String responseBody = response.body();
             obj = (JSONArray) parser.parse(responseBody);
@@ -185,6 +183,8 @@ public class APICaller {
 
             System.out.println(current_jwt);
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println("Response: " + response.statusCode());
 
             return response.statusCode() == 200;
 

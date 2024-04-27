@@ -78,7 +78,7 @@ public class StudentHomeWindow  extends UIWindow {
     @Override
     protected void addPrefabComponents(){
 
-        if(!optionalPacks.getOptionalPacks().isEmpty()) {
+        if(optionalPacks != null) {
 
             Label explanationLabel = new Label("Salut! De aici iti poti alege preferintele.\nAlege pentru fiecare pachet optiunile in ordinea dorita.", false, 32);
             explanationLabel.setRatioedPosition(0.5f, 0.05f);
@@ -159,11 +159,6 @@ public class StudentHomeWindow  extends UIWindow {
 
                 optionalHalfWindow.addDockedWindow(packWindow, packWindow.getDockPosition(), packWindow.getDockRatio());
             }
-        }
-        else{
-            Label explanationLabel = new Label("Salut! S-a trecut de deadline-ul pana cand\nIti puteai alege optionalele\nAcestea sunt optionalele tale:", false, 32);
-            explanationLabel.setRatioedPosition(0.5f, 0.05f);
-            addComponent(explanationLabel);
         }
     }
 
