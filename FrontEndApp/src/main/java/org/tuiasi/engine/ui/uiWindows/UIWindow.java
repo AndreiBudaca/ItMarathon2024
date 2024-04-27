@@ -37,8 +37,20 @@ public class UIWindow extends IUIWindow{
         super(windowTitle, relativePosition, size);
     }
 
+    public UIWindow(String windowTitle, int dockDirection, float dockRatio){
+        super(windowTitle, dockDirection, dockRatio);
+    }
+
     public UIWindow(String windowTitle, ImVec2 relativePosition, ImVec2 size, boolean isRootWindow){
         super(windowTitle, relativePosition, size);
+        if(isRootWindow){
+            addFlag(ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking);
+        }
+        this.isRoot = isRootWindow;
+    }
+
+    public UIWindow(String windowTitle, int dockDirection, float dockRatio, boolean isRootWindow){
+        super(windowTitle, dockDirection, dockRatio);
         if(isRootWindow){
             addFlag(ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking);
         }

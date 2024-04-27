@@ -1,11 +1,10 @@
 package org.tuiasi;
 
 import org.joml.Vector4f;
-import org.lwjgl.*;
+import org.lwjgl.Version;
 import org.lwjgl.glfw.*;
-import org.tuiasi.engine.networking.APICaller;
 import org.tuiasi.engine.ui.AppWindow;
-import org.tuiasi.engine.ui.DefaultEngineEditorUI;
+import org.tuiasi.engine.ui.DefaultAppUI;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -23,8 +22,9 @@ public class TutelEngine {
     }
 
     private void init() {
-        appWindow = new AppWindow(1920, 1080, "Tutel Engine", new Vector4f(0.25f, 0.25f, 0.25f, 0.25f), new DefaultEngineEditorUI());
+        appWindow = new AppWindow(1920, 1080, "Manager optionale", new Vector4f(0.25f, 0.25f, 0.25f, 0.25f), new DefaultAppUI());
         appWindow.init();
+
     }
 
     private void loop() {
