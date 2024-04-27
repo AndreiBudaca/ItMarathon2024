@@ -20,5 +20,9 @@ namespace ItMarathon.Api.Models.Authentication
         [MinLength(8, ErrorMessage = "Password must be at least 8 characters long")]
         [MaxLength(50, ErrorMessage = "Password must have less then 50 characters")]
         public string Password { get; set; }
+
+        [Required]
+        [Range(1, 10, ErrorMessage = "Please provide a valid value for the year of study")]
+        public int YearOfStudy {  get; set; }
     }
 }

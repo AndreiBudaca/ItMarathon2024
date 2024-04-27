@@ -54,6 +54,7 @@ namespace ItMarathon.Api.Controllers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Password = user.Password,
+                YearOfStudy = user.YearOfStudy,
                 Role = Core.Types.UserRole.Student
             });
 
@@ -62,7 +63,7 @@ namespace ItMarathon.Api.Controllers
                 return Ok();
             }
 
-            return BadRequest(error);
+            return UnprocessableEntity(error);
         }
     }
 }

@@ -12,6 +12,8 @@ namespace ItMarathon.Service.Authentication.Dto
 
         public string FirstName { get; set; }
 
+        public int YearOfStudy {  get; set; }
+
         public UserRole Role { get; set; }
     }
 }

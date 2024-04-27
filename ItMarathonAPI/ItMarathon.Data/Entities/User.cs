@@ -16,6 +16,8 @@ namespace ItMarathon.Data.Entities
 
         public byte[] PasswordHash { get; set; }
 
+        public int YearOfStudy { get; set; }
+
         public UserRole Role { get; set; }
     }
 }

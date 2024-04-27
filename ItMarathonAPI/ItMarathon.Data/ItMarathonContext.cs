@@ -10,5 +10,7 @@ namespace ItMarathon.Data
         public DbSet<HelloWorld> HelloWorlds { get; set; }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Course> Courses { get; set; }
     }
 }

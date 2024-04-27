@@ -1,4 +1,5 @@
 ﻿using ItMarathon.Core;
+using ItMarathon.Core.CustomClaims;
 using ItMarathon.Data.Entities;
 using ItMarathon.Data.Infrastructure;
 using ItMarathon.Service.Authentication.Dto;
@@ -42,6 +43,7 @@ namespace ItMarathon.Service.Authentication
                 Email = dbUser.Email,
                 LastName = dbUser.LastName,
                 FirstName = dbUser.FirstName,
+                YearOfStudy = dbUser.YearOfStudy,
                 Role = dbUser.Role,
             };
         }
@@ -63,6 +65,7 @@ namespace ItMarathon.Service.Authentication
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Role = user.Role,
+                YearOfStudy = user.YearOfStudy,
                 PasswordHash = SHA256.HashData(Encoding.ASCII.GetBytes(user.Password))
             });
 
@@ -81,6 +84,7 @@ namespace ItMarathon.Service.Authentication
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
                 new Claim(ClaimTypes.Role, userInfo.Role.ToString()),
+                new Claim(CustomClaims.YearOfStudy, userInfo.YearOfStudy.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
