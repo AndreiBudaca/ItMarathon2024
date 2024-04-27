@@ -31,4 +31,5 @@ public abstract class IComponent {
 
         public abstract void render();
         public abstract String getLabel();
+        public abstract void setLabel(String label);
 }

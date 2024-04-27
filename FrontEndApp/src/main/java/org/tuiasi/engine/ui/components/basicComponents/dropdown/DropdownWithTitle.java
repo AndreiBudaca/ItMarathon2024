@@ -22,8 +22,10 @@ public class DropdownWithTitle extends IDropdown{
 
     @Override
     public void render() {
-        // Render the label
-        ImGui.text(label);
+        ImGui.setNextItemWidth(200);
+        ImGui.setCursorPosX((ImGui.getWindowSizeX() - getWidth()) * getRatioX() - 100);
+        ImGui.setCursorPosY((ImGui.getWindowSizeY() - getHeight()) * getRatioY());
+
         // Render the dropdown
         if (ImGui.beginCombo(label + "##Dropdown", items[selectedItemIndex])) {
             for (int i = 0; i < items.length; i++) {

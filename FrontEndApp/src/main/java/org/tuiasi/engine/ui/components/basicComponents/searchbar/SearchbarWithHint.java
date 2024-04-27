@@ -41,7 +41,7 @@ public class SearchbarWithHint extends ISearchbar {
         ImGui.setCursorPosX((ImGui.getWindowSizeX() - getWidth()) * getRatioX());
         ImGui.setCursorPosY((ImGui.getWindowSizeY() - getHeight()) * getRatioY());
 
-        int flags = isPassword ? ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.Password : ImGuiInputTextFlags.EnterReturnsTrue;
+        int flags = isPassword ? ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.Password : ImGuiInputTextFlags.AutoSelectAll;
 
         enterPressed = ImGui.inputTextWithHint("##Searchbar_" + label, hint, searchText, flags);
         ImGui.sameLine();
