@@ -21,6 +21,7 @@ import org.tuiasi.engine.ui.uiWindows.Page;
 import org.tuiasi.engine.ui.uiWindows.UIWindow;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class LoginWindow extends UIWindow {
@@ -117,14 +118,33 @@ public class LoginWindow extends UIWindow {
                     if(!loginStatus)
                         actionStatusLabel.setLabel("Logarea a esuat. Verifica credentialele");
                     else {
-                        // the student home page
-                        Page studentHomePage = new Page("StudentHomePage",
-                                List.of(
-                                        new StudentHomeWindow("StudentHomeWindow", ImGuiDir.None, 1.0f, true)
-                                )
-                        );
-                        DefaultAppUI.addPage(studentHomePage.getName(), studentHomePage);
-                        DefaultAppUI.setCurrentPage("StudentHomePage");
+                        String[] chunks = APICaller.current_jwt.split("\\.");
+                        Base64.Decoder decoder = Base64.getUrlDecoder();
+
+                        String header = new String(decoder.decode(chunks[0]));
+                        String payload = new String(decoder.decode(chunks[1]));
+
+                        if(payload.contains("Student")) {
+                            // the student home page
+                            Page studentHomePage = new Page("StudentHomePage",
+                                    List.of(
+                                            new StudentHomeWindow("StudentHomeWindow", ImGuiDir.None, 1.0f, true)
+                                    )
+                            );
+                            DefaultAppUI.addPage(studentHomePage.getName(), studentHomePage);
+                            DefaultAppUI.setCurrentPage("StudentHomePage");
+                        }
+                        else{
+                            // the student home page
+                            Page adminHomePage = new Page("AdminHomePage",
+                                    List.of(
+                                            new AdminHomeWindow("AdminHomeWindow", ImGuiDir.None, 1.0f, true)
+                                    )
+                            );
+                            DefaultAppUI.addPage(adminHomePage.getName(), adminHomePage);
+                            DefaultAppUI.setCurrentPage("AdminHomePage");
+
+                        }
                     }
                 }
                 else {
