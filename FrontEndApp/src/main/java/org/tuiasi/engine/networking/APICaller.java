@@ -145,8 +145,11 @@ public class APICaller {
                     .header("Authorization", "Bearer " + current_jwt)
                     .build();
 
-            System.out.println(current_jwt);
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if(response.statusCode() == 422){
+                return null;
+            }
 
             String responseBody = response.body();
             obj = (JSONArray) parser.parse(responseBody);

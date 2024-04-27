@@ -77,6 +77,7 @@ namespace ItMarathon.Service.StudentOptionals
                             if (optional == null) continue;
 
                             var optionalIndex = optionalGroup.ToList().IndexOf(optional);
+                            if (optionalIndex == -1) continue;    
                             if (freeSlots[optionalIndex] == 0) continue;
 
                             studentOptionals.Add(new StudentOptional
