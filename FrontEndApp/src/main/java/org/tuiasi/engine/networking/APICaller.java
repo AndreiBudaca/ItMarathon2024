@@ -13,6 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.security.cert.X509Certificate;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class APICaller {
@@ -91,11 +92,10 @@ public class APICaller {
             client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenApply(HttpResponse::body)
                     .thenAccept(response -> {
-                        current_jwt = response;
+                        current_jwt = response.substring(1, response.length()-1);
                     })
                     .join();
 
-            System.out.println(current_jwt);
             return !current_jwt.equals("The email / password combination is invalid");
 
         } catch (Exception e) {
@@ -132,31 +132,62 @@ public class APICaller {
 
     }
 
-    public JSONObject getOptionalPacks(){
+    public JSONArray getOptionalPacks(){
         try {
             JSONParser parser = new JSONParser();
-            JSONObject obj;
+            JSONArray obj;
 
             HttpRequest request = HttpRequest.newBuilder()
                     .GET()
-                    .uri(new URI("https://localhost:7262/api/OptionalPacks"))
-                    .header("accept", "application/json")
-                    .header("content-type", "application/json")
+                    .uri(new URI("https://localhost:7262/api/StudentOptionalPreferences"))
+                    .header("accept", "*/*")
+                    .header("content-type", "*/*")
                     .header("Authorization", "Bearer " + current_jwt)
                     .build();
 
-            String response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                    .thenApply(HttpResponse::body)
-                    .join();
+            System.out.println(current_jwt);
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            obj = (JSONObject) parser.parse(response);
-            System.out.println(obj.toJSONString());
+            String responseBody = response.body();
+            obj = (JSONArray) parser.parse(responseBody);
             return obj;
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
 
+    public boolean saveOptionals(List<SubjectPreferenceDTO> preference_order_pair){
+        try{
+            JSONArray array = new JSONArray();
+
+            for(SubjectPreferenceDTO pair: preference_order_pair){
+                if(pair.getOptionalId() != null) {
+                    JSONObject obj = new JSONObject();
+                    obj.put("optionalId", pair.getOptionalId());
+                    obj.put("sortOrder", pair.getSortOrder());
+                    array.add(obj);
+                }
+            }
+
+            System.out.println(array.toJSONString());
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .POST(HttpRequest.BodyPublishers.ofString(array.toJSONString()))
+                    .uri(new URI("https://localhost:7262/api/StudentOptionalPreferences"))
+                    .header("accept", "*/*")
+                    .header("content-type", "application/json")
+                    .header("Authorization", "Bearer " + current_jwt)
+                    .build();
+
+            System.out.println(current_jwt);
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            return response.statusCode() == 200;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

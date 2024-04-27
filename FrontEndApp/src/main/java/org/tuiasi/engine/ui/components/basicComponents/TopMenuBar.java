@@ -4,6 +4,8 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGui;
 import lombok.Getter;
 import org.tuiasi.engine.global.WindowVariables;
+import org.tuiasi.engine.networking.APICaller;
+import org.tuiasi.engine.ui.DefaultAppUI;
 import org.tuiasi.engine.ui.components.IComponent;
 
 public class TopMenuBar extends IComponent {
@@ -23,12 +25,16 @@ public class TopMenuBar extends IComponent {
 
         WindowVariables.getInstance().setMainMenuHeight(ImGui.getWindowSize().y);
 
-        if (ImGui.beginMenu("File")) {
+        if (ImGui.beginMenu("Options")) {
+            if(APICaller.current_jwt != null && !APICaller.current_jwt.equals("The email / password combination is invalid"))
+                if(ImGui.menuItem("Logout")){
+                    DefaultAppUI.setCurrentPage("LoginPage");
+                    APICaller.current_jwt = null;
+                    DefaultAppUI.removePage("StudentHomeWindow");
+                }
             ImGui.endMenu();
         }
-        if (ImGui.beginMenu("Edit")) {
-            ImGui.endMenu();
-        }
+
         ImGui.endMainMenuBar();
         ImGui.popStyleVar();
     }
