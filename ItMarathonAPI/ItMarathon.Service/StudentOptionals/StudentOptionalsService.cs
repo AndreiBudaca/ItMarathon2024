@@ -37,7 +37,7 @@ namespace ItMarathon.Service.StudentOptionals
                 StudentYearOfStudy = s.YearOfStudy,
                 CreditsCount = s.Grades.Where(g => g.Grade >= 5).Sum(g => g.Course.Credits),
                 LastSemesterCredits = s.Grades.Where(g => g.Grade >= 5 && g.StudyYear == (studyYear - 1)).Sum(g => g.Course.Credits),
-                LastSemesterGradeSum = s.Grades.Where(g => g.Grade >= 5 && g.StudyYear == (studyYear - 1)).Sum(g => g.Grade * g.Course.Credits,
+                LastSemesterGradeSum = s.Grades.Where(g => g.Grade >= 5 && g.StudyYear == (studyYear - 1)).Sum(g => g.Grade * g.Course.Credits),
                 Preferences = s.StudentOptionalPreferences
             }).OrderBy(s => s.StudentYearOfStudy)
             .ThenBy(s => s.Preferences.Count == 0 ? 1 : 0)
