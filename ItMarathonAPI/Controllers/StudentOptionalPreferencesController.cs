@@ -77,12 +77,12 @@ namespace ItMarathon.Api.Controllers
                     OptionalId = p.OptionalId,
                     StudentId = userId,
                     SortOrder = p.SortOrder,
+                    StudyYear = DateTime.Now.Month >= 10 ? DateTime.Now.Year + 2 : DateTime.Now.Year + 1
                 })
             );
 
             return Ok();
         }
-
 
         [HttpDelete]
         public async Task<IActionResult> DeletePreferences()

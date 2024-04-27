@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Identity.Client;
+using System.ComponentModel.DataAnnotations;
 
 namespace ItMarathon.Api.Models.StudentGrade
 {
@@ -10,5 +11,7 @@ namespace ItMarathon.Api.Models.StudentGrade
 
         [Range(0, 10, ErrorMessage = "Please provide a valid value for grade")]
         public decimal Grade { get; set; }
+
+        public int StudyYear {  get; set; }
     }
 }

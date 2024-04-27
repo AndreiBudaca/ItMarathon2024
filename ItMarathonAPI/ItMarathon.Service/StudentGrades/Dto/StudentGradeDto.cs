@@ -7,5 +7,7 @@
         public int CourseId { get; set; }
 
         public decimal Grade { get; set; }
+
+        public int StudyYear { get; set; }
     }
 }

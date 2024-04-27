@@ -3,12 +3,14 @@ using ItMarathon.Data.Infrastructure;
 using ItMarathon.Service.Courses.Dto;
 using ItMarathon.Service.StudentOptionalPreferences.Dto;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace ItMarathon.Service.StudentOptionalPreferences
 {
     public class StudentOptionalPreferenceService : IStudentOptionalPreferenceService
     {
         private readonly IRepository<StudentOptionalPreference> preferencesRepository;
+        private readonly IRepository<StudentOptional> optionalRepository;
         private readonly IRepository<Course> courseRepository;
         private readonly IUnitOfWork unitOfWork;
 
@@ -33,7 +35,7 @@ namespace ItMarathon.Service.StudentOptionalPreferences
 
             if (coursesAreInvalid) throw new Exception("All courses must be optional and for the next year of study!");
 
-            Add(userId, preferences);
+            await Add(userId, preferences);
 
             await unitOfWork.CommitAsync();
         }
@@ -54,7 +56,7 @@ namespace ItMarathon.Service.StudentOptionalPreferences
                 .AnyAsync(c => !c.IsOptional || c.YearOfStudy != (userYearOfStudy + 1));
 
             await Remove(userId);
-            Add(userId, preferences.OrderByDescending(p => p.SortOrder));
+            await Add(userId, preferences.OrderByDescending(p => p.SortOrder));
 
             await unitOfWork.CommitAsync();
         }
@@ -71,16 +73,33 @@ namespace ItMarathon.Service.StudentOptionalPreferences
             }
         }
 
-        private void Add(int userId, IEnumerable<StudentOptionalPreferenceDto> preferences)
+        private async Task Add(int userId, IEnumerable<StudentOptionalPreferenceDto> preferences)
         {
-            for (var i = 0; i < preferences.Count(); ++i)
+            var studyYears = preferences.Select(p => p.StudyYear).Distinct();
+
+            var optionalsExist = await optionalRepository.Query()
+                .Where(o => studyYears.Contains(o.StudyYear))
+                .AnyAsync();
+
+            var courses = courseRepository.Query()
+                .Where(c => preferences.Select(p => p.OptionalId).Contains(c.Id));
+
+            var packageSortOrder = courses.Select(c => c.OptionalPackage).Distinct().Select(c => new OptionalPackageSortOrderDto { OptionalPackage = c, Count = 0 }).ToList();
+
+            if (optionalsExist) throw new Exception("The optionals have been chosen already");
+
+            foreach (var preference in preferences)
             {
+                var sortOrder = packageSortOrder.First(so => courses.First(c => preference.OptionalId == c.Id).OptionalPackage == so.OptionalPackage);
                 preferencesRepository.Add(new StudentOptionalPreference
                 {
                     StudentId = userId,
-                    OptionalId = preferences.ElementAt(i).OptionalId,
-                    SortOrder = i
+                    OptionalId = preference.OptionalId,
+                    SortOrder = sortOrder.Count,
+                    YearOfStudy = preference.StudyYear,
                 });
+
+                sortOrder.Count += 1;
             }
         }
 
