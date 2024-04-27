@@ -4,8 +4,6 @@ namespace ItMarathon.Api.Models.StudentOptionalPreferences
 {
     public class StudentPreferencePackageModel
     {
-        public IEnumerable<StudentPreferenceModel> StudentPreferences { get; set; }
-
-        public IEnumerable<CourseModel> Options { get; set; }
+        public IEnumerable<StudentPreferenceWithCourseModel> Options { get; set; }
     }
 }

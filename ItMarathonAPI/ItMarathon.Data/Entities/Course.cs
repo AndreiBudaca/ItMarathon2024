@@ -24,5 +24,8 @@ namespace ItMarathon.Data.Entities
         public ICollection<StudentGrade> Grades { get; set; }
 
         public ICollection<StudentOptionalPreference> StudentOptionalPreferences { get; set; }
+
+        public ICollection<StudentOptional> StudentOptionals { get; set; }
+
     }
 }

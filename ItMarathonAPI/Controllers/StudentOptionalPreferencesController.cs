@@ -42,15 +42,8 @@ namespace ItMarathon.Api.Controllers
             {
                 model.Add(new StudentPreferencePackageModel
                 {
-                    StudentPreferences = userPreferences.Where(up => (courses.First(c => c.Id == up.OptionalId).OptionalPackage ?? 0) == packageId)
-                    .Select(up => new StudentPreferenceModel
-                    {
-                        OptionalId = up.OptionalId,
-                        StudentId = up.OptionalId,
-                        SortOrder = up.SortOrder,
-                    }),
                     Options = courses.Where(c => (c.OptionalPackage ?? 0) == packageId)
-                    .Select(c => new CourseModel
+                    .Select(c => new StudentPreferenceWithCourseModel
                     {
                         Id = c.Id,
                         Name = c.Name,
@@ -58,7 +51,8 @@ namespace ItMarathon.Api.Controllers
                         Credits = c.Credits,
                         Semester = c.Semester,
                         IsOptional = c.IsOptional,
-                        OptionalPackage = packageId
+                        OptionalPackage = packageId,
+                        SortOrder = userPreferences.FirstOrDefault(up => up.OptionalId == c.Id)?.SortOrder ?? null 
                     })
                 });
             }

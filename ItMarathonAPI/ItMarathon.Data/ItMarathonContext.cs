@@ -40,6 +40,18 @@ namespace ItMarathon.Data
                .WithOne(sg => sg.Optional)
                .HasForeignKey(sg => sg.OptionalId)
                .IsRequired();
+
+            modelBuilder.Entity<User>()
+               .HasMany(u => u.StudentOptionals)
+               .WithOne(sg => sg.Student)
+               .HasForeignKey(sg => sg.StudentId)
+               .IsRequired();
+
+            modelBuilder.Entity<Course>()
+               .HasMany(c => c.StudentOptionals)
+               .WithOne(sg => sg.Optional)
+               .HasForeignKey(sg => sg.OptionalId)
+               .IsRequired();
         }
     }
 }
