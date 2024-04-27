@@ -21,7 +21,7 @@ namespace ItMarathon.Api.Controllers
         [HttpGet()]
         public async Task<IActionResult> GetCourses()
         {
-            var courses = await coursesService.GetAllAsync();
+            var courses = await coursesService.GetAllAsync(null);
 
             return Ok(courses.Select(course => new CourseModel
             {

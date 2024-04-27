@@ -4,6 +4,7 @@ using ItMarathon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ItMarathon.Data.Migrations
 {
     [DbContext(typeof(ItMarathonContext))]
-    partial class ItMarathonContextModelSnapshot : ModelSnapshot
+    [Migration("20240427105716_Create_StudentGrade")]
+    partial class Create_StudentGrade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace ItMarathon.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("OptionalPackage")
                         .HasColumnType("int");
@@ -54,9 +57,6 @@ namespace ItMarathon.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Courses");
                 });
@@ -74,27 +74,7 @@ namespace ItMarathon.Data.Migrations
 
                     b.HasKey("StudentId", "CourseId");
 
-                    b.HasIndex("CourseId");
-
                     b.ToTable("StudentGrades");
-                });
-
-            modelBuilder.Entity("ItMarathon.Data.Entities.StudentOptionalPreference", b =>
-                {
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OptionalId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("int");
-
-                    b.HasKey("StudentId", "OptionalId");
-
-                    b.HasIndex("OptionalId");
-
-                    b.ToTable("StudentOptionalPreferences");
                 });
 
             modelBuilder.Entity("ItMarathon.Data.Entities.User", b =>
@@ -142,7 +122,7 @@ namespace ItMarathon.Data.Migrations
                 {
                     b.HasOne("ItMarathon.Data.Entities.Course", "Course")
                         .WithMany("Grades")
-                        .HasForeignKey("CourseId")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -157,37 +137,14 @@ namespace ItMarathon.Data.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("ItMarathon.Data.Entities.StudentOptionalPreference", b =>
-                {
-                    b.HasOne("ItMarathon.Data.Entities.Course", "Optional")
-                        .WithMany("StudentOptionalPreferences")
-                        .HasForeignKey("OptionalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ItMarathon.Data.Entities.User", "Student")
-                        .WithMany("StudentOptionalPreferences")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Optional");
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("ItMarathon.Data.Entities.Course", b =>
                 {
                     b.Navigation("Grades");
-
-                    b.Navigation("StudentOptionalPreferences");
                 });
 
             modelBuilder.Entity("ItMarathon.Data.Entities.User", b =>
                 {
                     b.Navigation("Grades");
-
-                    b.Navigation("StudentOptionalPreferences");
                 });
 #pragma warning restore 612, 618
         }

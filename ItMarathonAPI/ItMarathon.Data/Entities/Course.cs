@@ -1,5 +1,8 @@
-﻿namespace ItMarathon.Data.Entities
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ItMarathon.Data.Entities
 {
+    [Index(nameof(Name), IsUnique = true)]
     public class Course
     {
         public int Id { get; set; }
@@ -17,5 +20,9 @@
         public bool IsOptional { get; set; }
 
         public int? OptionalPackage { get; set; }
+
+        public ICollection<StudentGrade> Grades { get; set; }
+
+        public ICollection<StudentOptionalPreference> StudentOptionalPreferences { get; set; }
     }
 }

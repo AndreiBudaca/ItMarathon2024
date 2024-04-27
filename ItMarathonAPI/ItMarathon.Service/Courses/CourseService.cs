@@ -35,9 +35,9 @@ namespace ItMarathon.Service.Courses
             };
         }
 
-        public async Task<IEnumerable<CourseDto>> GetAllAsync()
+        public async Task<IEnumerable<CourseDto>> GetAllAsync(int? yearOfStudy, bool onlyOptionals = false)
         {
-            return await coursesRepository.Query()
+            var query = coursesRepository.Query()
                 .Select(course => new CourseDto
                 {
                     Id = course.Id,
@@ -48,7 +48,19 @@ namespace ItMarathon.Service.Courses
                     IsOptional = course.IsOptional,
                     Credits = course.Credits,
                     OptionalPackage = course.OptionalPackage,
-                }).ToListAsync();
+                });
+
+            if (yearOfStudy.HasValue)
+            {
+                query = query.Where(course => course.YearOfStudy == yearOfStudy.Value);
+            }
+
+            if (onlyOptionals)
+            {
+                query = query.Where(course => course.IsOptional);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task AddAsync(CourseDto course)
